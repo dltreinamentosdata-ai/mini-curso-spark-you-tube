@@ -43,6 +43,9 @@ print(PASTA)
 # MAGIC
 # MAGIC `defaultParallelism` é o total de cores dos executors: o máximo de tasks que rodam ao mesmo tempo.
 # MAGIC Com 1 worker de 4 cores, o resultado é 4.
+# MAGIC
+# MAGIC `spark.sparkContext` só funciona no compute **Dedicated**. No serverless e no modo Standard (Spark Connect),
+# MAGIC o SparkContext não está disponível e esta célula dá erro.
 
 # COMMAND ----------
 
