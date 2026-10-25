@@ -3,7 +3,8 @@
 # MAGIC # Mini-curso · O que é o Spark (e o que ele não é)
 # MAGIC
 # MAGIC Neste lab você vai ver, na prática, que o Spark **processa** dados mas não os **guarda**: os arquivos
-# MAGIC ficam no storage (aqui, um Volume do Unity Catalog), e o Spark lê, processa e devolve o resultado.
+# MAGIC ficam no storage (no vídeo, um container ADLS Gen2 mapeado no volume `landing` do Unity Catalog), e o
+# MAGIC Spark lê, processa e devolve o resultado.
 # MAGIC
 # MAGIC **Antes de começar**
 # MAGIC - Use um compute clássico all-purpose com Databricks Runtime **17.3 LTS** (Spark 4.0), access mode
@@ -16,8 +17,9 @@
 # MAGIC %md
 # MAGIC ## Configuração
 # MAGIC
-# MAGIC Todos os labs usam o mesmo catálogo, schema e Volume. `CATALOGO` pega o catálogo padrão do seu
-# MAGIC workspace; troque pelo nome de outro catálogo se quiser. Você precisa de permissão para criar schema nele.
+# MAGIC Todos os labs usam o mesmo catálogo, schema e volume: `<catálogo>.mini_curso.landing`. `CATALOGO` pega o
+# MAGIC catálogo padrão do seu workspace; troque pelo nome de outro catálogo se quiser. Você precisa de permissão
+# MAGIC para criar schema nele.
 
 # COMMAND ----------
 
@@ -25,7 +27,7 @@ from pyspark.sql import functions as F
 
 CATALOGO = spark.catalog.currentCatalog()
 SCHEMA = "mini_curso"
-VOLUME = "dados"
+VOLUME = "landing"
 
 assert CATALOGO not in ("hive_metastore", "spark_catalog"), (
     "CATALOGO precisa ser um catálogo do Unity Catalog — troque o valor acima pelo nome do seu."
@@ -75,4 +77,5 @@ volume_por_lado
 # MAGIC - O **resultado** (`volume_por_lado`) era só uma variável na memória do driver: some com o cluster.
 # MAGIC   Para guardar um resultado, você grava de volta no storage (tabela ou arquivo).
 # MAGIC
-# MAGIC Teste: termine o cluster, ligue de novo e liste o Volume outra vez.
+# MAGIC Teste: termine o cluster, ligue de novo e liste o volume outra vez. Se o seu `landing` for externo,
+# MAGIC abra o container no portal do Azure (Storage browser): os 8 arquivos estão lá, com ou sem cluster.

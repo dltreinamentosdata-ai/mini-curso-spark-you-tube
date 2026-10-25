@@ -3,8 +3,14 @@
 # MAGIC # Mini-curso · Setup — 1 GB de trades de BTC
 # MAGIC
 # MAGIC Rode este notebook **uma vez**, antes dos labs. Ele gera 20 milhões de trades sintéticos de BTC/USD
-# MAGIC (o ano de 2025, um trade a cada ~1,6 s) e grava num Volume do Unity Catalog como **8 arquivos CSV de
-# MAGIC ~125 MB**, ~1 GB no total. Nada é baixado da internet.
+# MAGIC (o ano de 2025, um trade a cada ~1,6 s) e grava no volume `landing` do Unity Catalog como **8 arquivos
+# MAGIC CSV de ~125 MB**, ~1 GB no total. Nada é baixado da internet.
+# MAGIC
+# MAGIC **Onde os arquivos ficam:**
+# MAGIC - No vídeo, `landing` é um **volume externo**: aponta para o container `landing` de uma conta ADLS Gen2,
+# MAGIC   e os arquivos aparecem no portal do Azure. O passo a passo para montar isso está no README do repositório.
+# MAGIC - Se você não criar o volume externo antes, o setup cria um **volume gerenciado** com o mesmo nome, no
+# MAGIC   storage padrão do catálogo. Os labs funcionam do mesmo jeito.
 # MAGIC
 # MAGIC O dado é **equilibrado de propósito**: os 8 arquivos têm o mesmo tamanho, e metade dos trades é `buy`,
 # MAGIC metade `sell`. Na leitura, cada arquivo vira exatamente uma partição (o limite padrão é 128 MB por
@@ -18,8 +24,9 @@
 # MAGIC %md
 # MAGIC ## Configuração
 # MAGIC
-# MAGIC Todos os labs usam o mesmo catálogo, schema e Volume. `CATALOGO` pega o catálogo padrão do seu
-# MAGIC workspace; troque pelo nome de outro catálogo se quiser. Você precisa de permissão para criar schema nele.
+# MAGIC Todos os labs usam o mesmo catálogo, schema e volume: `<catálogo>.mini_curso.landing`. `CATALOGO` pega o
+# MAGIC catálogo padrão do seu workspace; troque pelo nome de outro catálogo se quiser. Você precisa de permissão
+# MAGIC para criar schema nele.
 
 # COMMAND ----------
 
@@ -27,7 +34,7 @@ from pyspark.sql import functions as F
 
 CATALOGO = spark.catalog.currentCatalog()
 SCHEMA = "mini_curso"
-VOLUME = "dados"
+VOLUME = "landing"
 
 assert CATALOGO not in ("hive_metastore", "spark_catalog"), (
     "CATALOGO precisa ser um catálogo do Unity Catalog — troque o valor acima pelo nome do seu."
@@ -39,7 +46,7 @@ print(PASTA)
 # COMMAND ----------
 
 spark.sql(f"CREATE SCHEMA IF NOT EXISTS {CATALOGO}.{SCHEMA}")
-spark.sql(f"CREATE VOLUME IF NOT EXISTS {CATALOGO}.{SCHEMA}.{VOLUME}")
+spark.sql(f"CREATE VOLUME IF NOT EXISTS {CATALOGO}.{SCHEMA}.{VOLUME}")   # já existe como externo? não faz nada
 
 N = 20_000_000                 # trades
 INICIO = 1735689600            # 2025-01-01 00:00:00 UTC

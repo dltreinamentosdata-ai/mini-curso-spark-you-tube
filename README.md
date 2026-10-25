@@ -23,7 +23,7 @@ Notebooks Databricks do mini-curso gratuito **Como o Spark funciona por dentro**
 
 20 milhões de trades **sintéticos** de BTC/USD, um a cada ~1,6 s ao longo de 2025, gerados pelo próprio `lab-0-setup`. Nenhum arquivo de dados fica neste repositório e nada é baixado da internet.
 
-O setup grava 8 arquivos CSV de ~125 MB (~1 GB no total) num Volume do Unity Catalog, em `/Volumes/<catálogo>/mini_curso/dados/trades/`. O dado é equilibrado de propósito: os 8 arquivos têm o mesmo tamanho e metade dos trades é compra, metade venda. Na leitura, cada arquivo vira uma partição (o limite padrão é 128 MB por partição), e as contas dos vídeos fecham redondas.
+O setup grava 8 arquivos CSV de ~125 MB (~1 GB no total) no volume `landing` do Unity Catalog, em `/Volumes/<catálogo>/mini_curso/landing/trades/`. O dado é equilibrado de propósito: os 8 arquivos têm o mesmo tamanho e metade dos trades é compra, metade venda. Na leitura, cada arquivo vira uma partição (o limite padrão é 128 MB por partição), e os números que você vê batem com os do vídeo.
 
 | Coluna | Tipo | Exemplo |
 |---|---|---|
@@ -32,6 +32,34 @@ O setup grava 8 arquivos CSV de ~125 MB (~1 GB no total) num Volume do Unity Cat
 | `price` | `DECIMAL(10,2)` | `60000.00` |
 | `amount` | `DECIMAL(8,6)` | `0.001000` |
 | `side` | `STRING` | `buy` / `sell` |
+
+## Storage externo (opcional)
+
+No vídeo, o volume `landing` é **externo**: aponta para o container `landing` de uma conta ADLS Gen2 no Azure, e os arquivos aparecem no portal. Se você pular esta parte, o `lab-0-setup` cria um volume gerenciado com o mesmo nome e os labs funcionam igual.
+
+Para montar como no vídeo (precisa de permissão de Owner no resource group e de admin do metastore):
+
+1. **Conta de storage:** crie uma Storage account na mesma região do workspace, com **Advanced → Enable hierarchical namespace** marcado. Sem isso, o Databricks não consegue usar a conta. Dentro dela, crie o container `landing` e o diretório `mini-curso`.
+2. **Access Connector for Azure Databricks:** crie no mesmo resource group, com a managed identity ligada, e copie o **Resource ID**.
+3. **Permissão:** na conta de storage, **Access Control (IAM) → Add role assignment → Storage Blob Data Contributor** para o Access Connector.
+4. **Storage credential:** no Databricks, **Catalog → + → Create a credential**, tipo **Azure Managed Identity**, com o Resource ID do passo 2.
+5. **External location e volume:**
+
+```sql
+CREATE EXTERNAL LOCATION loc_landing
+URL 'abfss://landing@<sua-conta>.dfs.core.windows.net/'
+WITH (STORAGE CREDENTIAL <sua-credencial>);
+
+USE CATALOG <seu-catálogo>;
+CREATE SCHEMA IF NOT EXISTS mini_curso;
+CREATE EXTERNAL VOLUME mini_curso.landing
+LOCATION 'abfss://landing@<sua-conta>.dfs.core.windows.net/mini-curso';
+```
+
+Passo a passo completo na documentação:
+- [Criar uma conta para Data Lake Storage](https://learn.microsoft.com/en-us/azure/storage/blobs/create-data-lake-storage-account)
+- [Conectar a uma external location ADLS Gen2](https://learn.microsoft.com/en-us/azure/databricks/connect/unity-catalog/cloud-storage/external-locations-adls)
+- [Criar volumes](https://learn.microsoft.com/en-us/azure/databricks/volumes/utility-commands)
 
 ## Documentação oficial
 

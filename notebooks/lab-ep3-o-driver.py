@@ -16,8 +16,9 @@
 # MAGIC %md
 # MAGIC ## Configuração
 # MAGIC
-# MAGIC Todos os labs usam o mesmo catálogo, schema e Volume. `CATALOGO` pega o catálogo padrão do seu
-# MAGIC workspace; troque pelo nome de outro catálogo se quiser. Você precisa de permissão para criar schema nele.
+# MAGIC Todos os labs usam o mesmo catálogo, schema e volume: `<catálogo>.mini_curso.landing`. `CATALOGO` pega o
+# MAGIC catálogo padrão do seu workspace; troque pelo nome de outro catálogo se quiser. Você precisa de permissão
+# MAGIC para criar schema nele.
 
 # COMMAND ----------
 
@@ -25,7 +26,7 @@ from pyspark.sql import functions as F
 
 CATALOGO = spark.catalog.currentCatalog()
 SCHEMA = "mini_curso"
-VOLUME = "dados"
+VOLUME = "landing"
 
 assert CATALOGO not in ("hive_metastore", "spark_catalog"), (
     "CATALOGO precisa ser um catálogo do Unity Catalog — troque o valor acima pelo nome do seu."
