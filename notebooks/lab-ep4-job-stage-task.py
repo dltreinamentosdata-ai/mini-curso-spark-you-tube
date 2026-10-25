@@ -2,18 +2,22 @@
 # MAGIC %md
 # MAGIC # Mini-curso · Job, stage e task
 # MAGIC
-# MAGIC Em cada célula, abra o **Spark Jobs** que aparece embaixo da saída e conte jobs, stages e tasks.
+# MAGIC Neste lab você vai contar jobs, stages e tasks de três consultas. Depois de rodar cada célula, abra o
+# MAGIC **Spark Jobs** que aparece embaixo da saída.
 # MAGIC
-# MAGIC **Ambiente:** compute clássico all-purpose, DBR 17.3 LTS (Spark 4.0), access mode **Dedicated**,
-# MAGIC 1 driver + 1 worker `Standard_D4ds_v5` (4 cores), **Photon desligado**. Rode antes o
-# MAGIC `lab-0-setup`, que gera o dataset.
+# MAGIC **Antes de começar**
+# MAGIC - Use um compute clássico all-purpose com Databricks Runtime **17.3 LTS** (Spark 4.0), access mode
+# MAGIC   **Dedicated**, 1 worker com 4 cores (no vídeo: `Standard_D4ds_v5`, no Azure) e **Photon desligado**.
+# MAGIC   Com outro número de cores, alguns números saem diferentes dos do vídeo.
+# MAGIC - Rode o notebook `lab-0-setup` uma vez: ele gera o dataset que todos os labs usam.
+
 # COMMAND ----------
 
 # MAGIC %md
 # MAGIC ## Configuração
 # MAGIC
-# MAGIC Mesmo catálogo, schema e Volume em todos os labs do mini-curso. `CATALOGO` pega o catálogo padrão
-# MAGIC do workspace; troque se quiser outro.
+# MAGIC Todos os labs usam o mesmo catálogo, schema e Volume. `CATALOGO` pega o catálogo padrão do seu
+# MAGIC workspace; troque pelo nome de outro catálogo se quiser. Você precisa de permissão para criar schema nele.
 
 # COMMAND ----------
 

@@ -2,18 +2,23 @@
 # MAGIC %md
 # MAGIC # Mini-curso · O cluster por dentro: worker, executor, cluster manager
 # MAGIC
-# MAGIC Antes de rodar: abra a página do **Compute** e mostre o tipo do driver e do worker.
+# MAGIC Neste lab você vai identificar as peças do seu cluster e ver onde as tasks rodam.
 # MAGIC
-# MAGIC **Ambiente:** compute clássico all-purpose, DBR 17.3 LTS (Spark 4.0), access mode **Dedicated**,
-# MAGIC 1 driver + 1 worker `Standard_D4ds_v5` (4 cores), **Photon desligado**. Rode antes o
-# MAGIC `lab-0-setup`, que gera o dataset.
+# MAGIC Antes de rodar, abra a página do seu **Compute** e confira o tipo de máquina do driver e do worker.
+# MAGIC
+# MAGIC **Antes de começar**
+# MAGIC - Use um compute clássico all-purpose com Databricks Runtime **17.3 LTS** (Spark 4.0), access mode
+# MAGIC   **Dedicated**, 1 worker com 4 cores (no vídeo: `Standard_D4ds_v5`, no Azure) e **Photon desligado**.
+# MAGIC   Com outro número de cores, alguns números saem diferentes dos do vídeo.
+# MAGIC - Rode o notebook `lab-0-setup` uma vez: ele gera o dataset que todos os labs usam.
+
 # COMMAND ----------
 
 # MAGIC %md
 # MAGIC ## Configuração
 # MAGIC
-# MAGIC Mesmo catálogo, schema e Volume em todos os labs do mini-curso. `CATALOGO` pega o catálogo padrão
-# MAGIC do workspace; troque se quiser outro.
+# MAGIC Todos os labs usam o mesmo catálogo, schema e Volume. `CATALOGO` pega o catálogo padrão do seu
+# MAGIC workspace; troque pelo nome de outro catálogo se quiser. Você precisa de permissão para criar schema nele.
 
 # COMMAND ----------
 
@@ -35,7 +40,8 @@ print(PASTA)
 # MAGIC %md
 # MAGIC ## 1 · Quantas tasks o cluster roda ao mesmo tempo?
 # MAGIC
-# MAGIC `defaultParallelism` é o total de cores dos executors. No cluster do curso: 1 worker × 4 cores.
+# MAGIC `defaultParallelism` é o total de cores dos executors: o máximo de tasks que rodam ao mesmo tempo.
+# MAGIC Com 1 worker de 4 cores, o resultado é 4.
 
 # COMMAND ----------
 
@@ -46,9 +52,10 @@ spark.sparkContext.defaultParallelism
 # MAGIC %md
 # MAGIC ## 2 · Quem executa as tasks?
 # MAGIC
-# MAGIC Uma consulta que lê o 1 GB inteiro (nenhum trade passa de 99.999, então volta vazio).
-# MAGIC Depois abra **Spark UI › Executors**: o `driver` fica com 0 tasks; todas as tasks rodaram no executor.
-# MAGIC (A aba soma desde que o cluster subiu. Pra ver exatamente 8, reinicie o cluster antes desta célula.)
+# MAGIC A consulta abaixo lê o 1 GB inteiro (nenhum trade passa de 99.999, então o resultado volta vazio).
+# MAGIC Depois abra **Spark UI › Executors** e compare as linhas: o `driver` fica com 0 tasks, e todas as tasks
+# MAGIC rodaram no executor. A aba soma tudo desde que o cluster ligou; para ver exatamente 8, reinicie o
+# MAGIC cluster antes desta célula.
 # COMMAND ----------
 
 df = spark.read.csv(PASTA, header=True, schema=ESQUEMA)

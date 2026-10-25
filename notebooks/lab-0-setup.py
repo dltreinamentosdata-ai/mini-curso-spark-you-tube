@@ -2,22 +2,24 @@
 # MAGIC %md
 # MAGIC # Mini-curso · Setup — 1 GB de trades de BTC
 # MAGIC
-# MAGIC **Rode uma vez, antes de gravar.** Gera 20 milhões de trades sintéticos de BTC/USD (o ano de 2025,
-# MAGIC um trade a cada ~1,6 s) e grava num Volume como **8 arquivos CSV de ~125 MB**, ~1 GB no total.
+# MAGIC Rode este notebook **uma vez**, antes dos labs. Ele gera 20 milhões de trades sintéticos de BTC/USD
+# MAGIC (o ano de 2025, um trade a cada ~1,6 s) e grava num Volume do Unity Catalog como **8 arquivos CSV de
+# MAGIC ~125 MB**, ~1 GB no total. Nada é baixado da internet.
 # MAGIC
-# MAGIC O dado é **equilibrado de propósito**: os 8 arquivos têm o mesmo tamanho, metade dos trades é
-# MAGIC `buy` e metade `sell`. Na leitura, cada arquivo vira exatamente uma partição (o limite padrão é
-# MAGIC 128 MB por partição), e as contas dos vídeos fecham redondas. Dado desequilibrado (skew) fica pro curso.
+# MAGIC O dado é **equilibrado de propósito**: os 8 arquivos têm o mesmo tamanho, e metade dos trades é `buy`,
+# MAGIC metade `sell`. Na leitura, cada arquivo vira exatamente uma partição (o limite padrão é 128 MB por
+# MAGIC partição). Assim, os números que você vê batem com os do vídeo.
 # MAGIC
-# MAGIC **Ambiente:** compute clássico all-purpose, DBR 17.3 LTS (Spark 4.0), access mode **Dedicated**,
-# MAGIC 1 driver + 1 worker `Standard_D4ds_v5` (4 cores), **Photon desligado**.
+# MAGIC **Compute:** clássico all-purpose, Databricks Runtime **17.3 LTS** (Spark 4.0), access mode **Dedicated**,
+# MAGIC 1 worker com 4 cores (no vídeo: `Standard_D4ds_v5`, no Azure), **Photon desligado**.
+
 # COMMAND ----------
 
 # MAGIC %md
 # MAGIC ## Configuração
 # MAGIC
-# MAGIC Mesmo catálogo, schema e Volume em todos os labs do mini-curso. `CATALOGO` pega o catálogo padrão
-# MAGIC do workspace; troque se quiser outro.
+# MAGIC Todos os labs usam o mesmo catálogo, schema e Volume. `CATALOGO` pega o catálogo padrão do seu
+# MAGIC workspace; troque pelo nome de outro catálogo se quiser. Você precisa de permissão para criar schema nele.
 
 # COMMAND ----------
 

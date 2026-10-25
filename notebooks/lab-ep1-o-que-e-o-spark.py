@@ -2,19 +2,22 @@
 # MAGIC %md
 # MAGIC # Mini-curso · O que é o Spark (e o que ele não é)
 # MAGIC
-# MAGIC O dado mora no **storage** (aqui, um Volume). O Spark **lê, processa e devolve** o resultado.
-# MAGIC Ele não guarda nada: desligue o cluster e os arquivos continuam lá.
+# MAGIC Neste lab você vai ver, na prática, que o Spark **processa** dados mas não os **guarda**: os arquivos
+# MAGIC ficam no storage (aqui, um Volume do Unity Catalog), e o Spark lê, processa e devolve o resultado.
 # MAGIC
-# MAGIC **Ambiente:** compute clássico all-purpose, DBR 17.3 LTS (Spark 4.0), access mode **Dedicated**,
-# MAGIC 1 driver + 1 worker `Standard_D4ds_v5` (4 cores), **Photon desligado**. Rode antes o
-# MAGIC `lab-0-setup`, que gera o dataset.
+# MAGIC **Antes de começar**
+# MAGIC - Use um compute clássico all-purpose com Databricks Runtime **17.3 LTS** (Spark 4.0), access mode
+# MAGIC   **Dedicated**, 1 worker com 4 cores (no vídeo: `Standard_D4ds_v5`, no Azure) e **Photon desligado**.
+# MAGIC   Com outro número de cores, alguns números saem diferentes dos do vídeo.
+# MAGIC - Rode o notebook `lab-0-setup` uma vez: ele gera o dataset que todos os labs usam.
+
 # COMMAND ----------
 
 # MAGIC %md
 # MAGIC ## Configuração
 # MAGIC
-# MAGIC Mesmo catálogo, schema e Volume em todos os labs do mini-curso. `CATALOGO` pega o catálogo padrão
-# MAGIC do workspace; troque se quiser outro.
+# MAGIC Todos os labs usam o mesmo catálogo, schema e Volume. `CATALOGO` pega o catálogo padrão do seu
+# MAGIC workspace; troque pelo nome de outro catálogo se quiser. Você precisa de permissão para criar schema nele.
 
 # COMMAND ----------
 
@@ -36,7 +39,7 @@ print(PASTA)
 # MAGIC %md
 # MAGIC ## 1 · O dado está no storage
 # MAGIC
-# MAGIC 8 arquivos CSV, ~125 MB cada, ~1 GB no total. Nenhum deles está "dentro" do Spark.
+# MAGIC Liste os arquivos do Volume. São 8 CSVs de ~125 MB, ~1 GB no total, e nenhum deles está "dentro" do Spark.
 
 # COMMAND ----------
 
@@ -70,4 +73,6 @@ volume_por_lado
 # MAGIC
 # MAGIC - Os **8 arquivos** continuam no Volume: são do storage.
 # MAGIC - O **resultado** (`volume_por_lado`) era só uma variável na memória do driver: some com o cluster.
-# MAGIC   Pra guardar, você grava de volta no storage (tabela ou arquivo).
+# MAGIC   Para guardar um resultado, você grava de volta no storage (tabela ou arquivo).
+# MAGIC
+# MAGIC Teste: termine o cluster, ligue de novo e liste o Volume outra vez.
