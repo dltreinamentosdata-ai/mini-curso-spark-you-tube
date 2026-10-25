@@ -57,6 +57,7 @@ spark.sparkContext.defaultParallelism
 # MAGIC Depois abra **Spark UI › Executors** e compare as linhas: o `driver` fica com 0 tasks, e todas as tasks
 # MAGIC rodaram no executor. A aba soma tudo desde que o cluster ligou; para ver exatamente 8, reinicie o
 # MAGIC cluster antes desta célula.
+
 # COMMAND ----------
 
 df = spark.read.csv(PASTA, header=True, schema=ESQUEMA)

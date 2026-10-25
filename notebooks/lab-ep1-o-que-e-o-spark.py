@@ -59,6 +59,7 @@ print(f"{len(arquivos)} arquivos · {sum(tamanhos):,.0f} MiB no total")
 # MAGIC ## 2 · O Spark lê e processa
 # MAGIC
 # MAGIC Quanto BTC foi negociado em cada lado: compra (`buy`) e venda (`sell`)?
+
 # COMMAND ----------
 
 df = spark.read.csv(PASTA, header=True, schema=ESQUEMA)

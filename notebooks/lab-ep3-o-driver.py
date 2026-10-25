@@ -34,6 +34,7 @@ assert CATALOGO not in ("hive_metastore", "spark_catalog"), (
 PASTA = f"/Volumes/{CATALOGO}/{SCHEMA}/{VOLUME}/trades"
 ESQUEMA = "trade_id LONG, ts TIMESTAMP, price DECIMAL(10,2), amount DECIMAL(8,6), side STRING"
 print(PASTA)
+
 # COMMAND ----------
 
 df = spark.read.csv(PASTA, header=True, schema=ESQUEMA)
